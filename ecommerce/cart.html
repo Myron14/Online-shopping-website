@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Box icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+    />
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Your Cart</title>
+    z
+  </head>
+  <body>
+    <!-- Navigation -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us:(+91) 9822143614,8412878029</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="terms.xml">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="navigation">
+      <div class="nav-center container d-flex">
+        <a href="index.html" class="logo"><h1>VK Handicrafts & Clothing</h1></a>
+
+        <ul class="nav-list d-flex">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="product.html" class="nav-link">Shop</a>
+          </li>
+          <li class="nav-item">
+            <a href="terms.xml" class="nav-link">Terms</a>
+          </li>
+          <li class="nav-item">
+            <a href="about.html" class="nav-link">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="contact.html" class="nav-link">Contact</a>
+          </li>
+        </ul>
+
+        <div class="icons d-flex">
+          <a href="login.html" class="icon">
+              <i class="bx bx-user"></i>
+          </a>
+          <a href="search.html" class="icon">
+              <i class="bx bx-search"></i>
+          </a>
+          <div class="icon">
+              <i class="bx bx-heart"></i>
+              <span class="d-flex">0</span>
+          </div>
+          <a href="cart.html" class="icon">
+              <i class="bx bx-cart"></i>
+              <span class="d-flex">0</span>
+          </a>
+          <a href="logout.php" class ="icon">
+             <i class="bx bx-log-out"></i>
+          </a>
+        </div>
+
+        <div class="hamburger">
+          <i class="bx bx-menu-alt-left"></i>
+        </div>
+      </div>
+    </div>
+
+ 
+
+    <!-- Cart Items -->
+    <div class="container cart">
+      <table>
+        <thead>
+          <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tr>
+          <td>
+            <div class="cart-info">
+              
+      </table>
+      <div class="total-price">
+        <table>
+          <tr>
+            <td>Subtotal</td>
+            <td class="subtotal"></td>
+          </tr>
+          <tr>
+            <td>Tax</td>
+            <td class="tax"></td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td class="total"></td>
+          </tr>
+        </table>
+        <button id="checkoutBtn" class="checkout bt">Proceed To Checkout</button>
+      </div>
+    </div>
+
+    
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="">About us</a>
+          <a href="">Contact Us</a>
+          <a href="">Term & Conditions</a>
+          <a href="">Shipping Guide</a>
+        </div>
+        <div class="col d-flex">
+          <h4>USEFUL LINK</h4>
+          <a href="">Online Store</a>
+          <a href="">Customer Services</a>
+          <a href="">Promotion</a>
+          <a href="">Top Brands</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class="bx bxl-facebook-square"></i></span>
+          <span><i class="bx bxl-instagram-alt"></i></span>
+          <span><i class="bx bxl-github"></i></span>
+          <span><i class="bx bxl-twitter"></i></span>
+          <span><i class="bx bxl-pinterest"></i></span>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const cartContainer = document.querySelector('.cart tbody');
+        const subtotalElement = document.querySelector('.subtotal');
+        const taxElement = document.querySelector('.tax');
+        const totalElement = document.querySelector('.total');
+        
+        // Retrieve cart items from local storage
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        
+        // Function to create HTML for each cart item
+        function createCartItemHTML(product) {
+          return `
+            <tr>
+              <td>
+                <div class="cart-info">
+                  <img src="${product.image}" alt="${product.productName}" />
+                  <div>
+                    <p>${product.productName}</p>
+                    <span>Price: ${product.price}</span> <br />
+                    <button class="remove-item">Remove</button>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <input type="number" value="1" min="1" class="quantity-input" />
+              </td>
+              <td>${product.price}</td>
+            </tr>
+          `;
+        }
+        
+        // Function to render cart items
+        function renderCartItems() {
+          // Clear previous content
+          cartContainer.innerHTML = '';
+      
+          // Loop through cart items and append HTML to cart container
+          cartItems.forEach(product => {
+            const itemHTML = createCartItemHTML(product);
+            cartContainer.innerHTML += itemHTML;
+          });
+      
+          // Attach event listeners to remove buttons
+          attachRemoveButtonListeners();
+          
+          // Attach event listener to quantity input fields
+          const quantityInputs = document.querySelectorAll('.quantity-input');
+          quantityInputs.forEach(input => {
+            input.addEventListener('input', updateSubtotal);
+          });
+      
+          // Update subtotal, tax, and total
+          updateSubtotal();
+        }
+      
+        // Function to attach event listeners to remove buttons
+        function attachRemoveButtonListeners() {
+          const removeButtons = document.querySelectorAll('.remove-item');
+          removeButtons.forEach(button => {
+            button.addEventListener('click', removeCartItem);
+          });
+        }
+        
+        // Function to update subtotal, tax, and total
+        function updateSubtotal() {
+          let subtotal = 0;
+          cartItems.forEach(product => {
+            subtotal += parseFloat(product.price.replace('₹', ''));
+          });
+          subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+          
+          // Update tax and total
+          const taxRate = 0.1; // 10% tax rate
+          const tax = subtotal * taxRate;
+          taxElement.textContent = `₹${tax.toFixed(2)}`;
+          
+          const total = subtotal + tax;
+          totalElement.textContent = `₹${total.toFixed(2)}`;
+        }
+        
+        // Call the function to render cart items initially
+        renderCartItems();
+        
+        // Function to remove item from cart
+        function removeCartItem(event) {
+          const button = event.target;
+          const row = button.closest('tr');
+          const index = Array.from(cartContainer.children).indexOf(row);
+          
+          // Remove item from cartItems array
+          cartItems.splice(index, 1);
+          
+          // Update local storage
+          localStorage.setItem('cartItems', JSON.stringify(cartItems));
+          
+          // Remove the row from the table
+          row.remove();
+          
+          // Update subtotal, tax, and total
+          updateSubtotal();
+        }
+      
+        // Function to initialize Razorpay payment
+        function initiateRazorpayPayment(totalAmount) {
+          var options = {
+            key: 'rzp_test_LtO9Teo1fc51ZL', // Replace with your Razorpay API key
+            amount: totalAmount * 100, // Amount is in paisa
+            currency: 'INR',
+            name: 'VK Handicrafts & Clothing',
+            description: 'Payment for your purchase',
+            handler: function(response) {
+              // Handle the Razorpay payment success
+              console.log(response);
+              alert('Payment successful. Payment ID: ' + response.razorpay_payment_id);
+              // Redirect or perform further actions as needed
+              window.location.href = 'ty.html';
+            },
+        
+            theme: {
+              color: '#528FF0'
+            }
+          };
+          var rzp = new Razorpay(options);
+          rzp.open();
+        }
+      
+        // Retrieve cart items and total amount from local storage
+        let totalAmount = parseFloat(document.querySelector('.total').textContent.replace('₹', ''));
+      
+        // Attach event listener to Proceed to Checkout button
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+          // Call function to initiate Razorpay payment
+          initiateRazorpayPayment(totalAmount);
+        });
+      });
+      </script>
+
+
+  
+
+
+  </body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Box icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+    />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <title>product-details</title>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us:(+91) 9822143614,8412878029</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="navigation">
+      <div class="nav-center container d-flex">
+        <a href="index.html" class="logo"><h1>VK Handicrafts & Clothing</h1></a>
+
+        <ul class="nav-list d-flex">
+          <li class="nav-item">
+            <a href="index.php" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="product.html" class="nav-link">Shop</a>
+          </li>
+          <li class="nav-item">
+            <a href="terms.xml" class="nav-link">Terms</a>
+          </li>
+          <li class="nav-item">
+            <a href="about.html" class="nav-link">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="contact.html" class="nav-link">Contact</a>
+          </li>
+        </ul>
+
+        <div class="icons d-flex">
+          <a href="login.html" class="icon">
+              <i class="bx bx-user"></i>
+          </a>
+          <a href="search.html" class="icon">
+              <i class="bx bx-search"></i>
+          </a>
+          <div class="icon">
+              <i class="bx bx-heart"></i>
+              <span class="d-flex">0</span>
+          </div>
+          <a href="cart.html" class="icon">
+              <i class="bx bx-cart"></i>
+              <span class="d-flex">0</span>
+          </a>
+          <a href="logout.php" class ="icon">
+             <i class="bx bx-log-out"></i>
+          </a>
+        </div>
+
+        <div class="hamburger">
+          <i class="bx bx-menu-alt-left"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details -->
+    <section class="section product-detail">
+      <div class="details container">
+        <div class="left image-container">
+          <div class="main">
+            <img id="product-image" src="" alt="" />
+          </div>
+        </div>
+        <div class="right">
+          <h1 id="product-name"></h1>
+            <div class="price" id="product-price"></div>
+          </form><br>
+          <input type="number" id="quantity" value="1" min="1" style="width: 4rem;"/><br><br>
+          <form class="form">
+            <button class="addCart">Add To Cart</button>
+          </form>
+          <h3>PRODUCT DETAILS</h3>
+        <p>
+          Elevate your style effortlessly with our curated collection of women's accessories. 
+          From subtle accents to statement pieces, each item is crafted to add an extra layer of elegance and flair to your ensemble. 
+          Embrace the versatility of our accessories as they seamlessly transition from day to night, adding a touch of sophistication to any occasion. 
+          Explore our range of timeless pieces designed to inspire confidence and elevate your individual sense of style.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="">About us</a>
+          <a href="">Contact Us</a>
+          <a href="">Term & Conditions</a>
+          <a href="">Shipping Guide</a>
+        </div>
+        <div class="col d-flex">
+          <h4>USEFUL LINK</h4>
+          <a href="">Online Store</a>
+          <a href="">Customer Services</a>
+          <a href="">Promotion</a>
+          <a href="">Top Brands</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class="bx bxl-facebook-square"></i></span>
+          <span><i class="bx bxl-instagram-alt"></i></span>
+          <span><i class="bx bxl-github"></i></span>
+          <span><i class="bx bxl-twitter"></i></span>
+          <span><i class="bx bxl-pinterest"></i></span>
+        </div>
+      </div>
+    </footer>
+    <!-- Custom Script -->
+    <script>
+      // Get the input element
+      const quantityInput = document.getElementById('quantity');
+    
+      // Add event listener for input change
+      quantityInput.addEventListener('input', function() {
+        // Get the selected quantity
+        const quantity = parseInt(quantityInput.value);
+    
+        // Ensure the quantity is at least 1
+        if (quantity < 1) {
+          quantityInput.value = 1;
+        }
+    
+        // You can perform any additional actions here, such as updating the total price
+      });
+    
+    
+    
+      // Extract URL parameters
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+
+      // Get product details from URL parameters
+      const productName = urlParams.get('productName');
+      const price = urlParams.get('price');
+      const image = urlParams.get('image');
+
+      // Populate product details on the page
+      document.getElementById('product-name').textContent = productName;
+      document.getElementById('product-price').textContent = price;
+      document.getElementById('product-image').src = image;
+
+      // Function to handle adding product to the cart
+function addToCart(productName, price, image, quantity) {
+  // Get existing cart items from local storage or initialize an empty array
+  let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+  // Add the new product to the cart items array
+  cartItems.push({ productName, price, image, quantity });
+
+  // Log the product details
+  console.log("Product Name:", productName);
+  console.log("Price:", price);
+  console.log("Image:", image);
+  console.log("Quantity:", quantity);
+
+  // Save the updated cart items to local storage
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+  // Update the cart counter
+  const cartCounter = document.querySelector('.icons .bx-cart + .d-flex');
+  let count = parseInt(cartCounter.textContent);
+  count += quantity;
+  cartCounter.textContent = count;
+
+  alert('Product added to cart!');
+}
+
+// Add event listener to the add to cart button
+const addToCartButton = document.querySelector('.addCart');
+addToCartButton.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent form submission
+
+  // Get product details from the page
+  const productName = document.getElementById('product-name').textContent.trim();
+  const price = document.getElementById('product-price').textContent.trim();
+  const productImage = document.getElementById('product-image').src;
+  const quantity = parseInt(document.getElementById('quantity').value);
+
+  // Add the product to the cart
+  addToCart(productName, price, productImage, quantity);
+});
+
+  </script>
+  </body>
+</html>
